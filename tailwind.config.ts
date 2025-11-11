@@ -13,6 +13,10 @@ export default {
       },
     },
     extend: {
+      perspective: {
+        '1000': '1000px',
+        '2000': '2000px',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -47,11 +51,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        luxury: {
-          gold: "hsl(var(--luxury-gold))",
-          charcoal: "hsl(var(--luxury-charcoal))",
-          stone: "hsl(var(--luxury-stone))",
-        },
+        "luxury-gold": "hsl(var(--luxury-gold))",
+        "luxury-gold-light": "hsl(var(--luxury-gold-light))",
+        "luxury-charcoal": "hsl(var(--luxury-charcoal))",
+        "luxury-stone": "hsl(var(--luxury-stone))",
+        "luxury-pearl": "hsl(var(--luxury-pearl))",
       },
       borderRadius: {
         lg: "var(--radius)",
