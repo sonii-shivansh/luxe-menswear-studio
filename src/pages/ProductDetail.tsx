@@ -1,14 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { ShoppingBag, Heart, Truck, RefreshCcw } from "lucide-react";
+import { ShoppingBag, Heart, Truck, RefreshCcw, Shield } from "lucide-react";
 import { toast } from "sonner";
 import productShirt1 from "@/assets/product-shirt-1.jpg";
 import productBlazer1 from "@/assets/product-blazer-1.jpg";
 import productPants1 from "@/assets/product-pants-1.jpg";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Mock product data
 const productData: Record<string, any> = {
@@ -64,65 +69,96 @@ const ProductDetail = () => {
   const product = productData[id || "1"] || productData["1"];
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  
+  const imageRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (imageRef.current) {
+      gsap.fromTo(
+        imageRef.current,
+        { opacity: 0, x: -100, scale: 0.9 },
+        { opacity: 1, x: 0, scale: 1, duration: 1.2, ease: 'power3.out' }
+      );
+    }
+
+    if (contentRef.current) {
+      gsap.fromTo(
+        contentRef.current,
+        { opacity: 0, x: 100 },
+        { opacity: 1, x: 0, duration: 1.2, delay: 0.3, ease: 'power3.out' }
+      );
+    }
+  }, [id]);
 
   const handleAddToCart = () => {
     if (!selectedSize) {
       toast.error("Please select a size");
       return;
     }
-    toast.success("Added to cart");
+    toast.success("Added to cart", {
+      description: `${product.name} - Size ${selectedSize}`,
+    });
+  };
+
+  const handleWishlist = () => {
+    setIsWishlisted(!isWishlisted);
+    toast.success(isWishlisted ? "Removed from wishlist" : "Added to wishlist");
   };
 
   return (
     <div className="min-h-screen flex flex-col">
+      <ScrollProgress />
       <Navbar />
 
-      <main className="flex-1 py-12 lg:py-16 bg-background">
+      <main className="flex-1 py-16 lg:py-24 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Product Images */}
-            <div className="space-y-4">
-              <div className="aspect-[3/4] overflow-hidden bg-muted">
+            <div ref={imageRef} className="space-y-6">
+              <div className="aspect-[3/4] overflow-hidden bg-muted luxury-shadow group relative">
                 <img
                   src={product.images[0]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-110 luxury-transition-slow"
                 />
+                <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100" />
               </div>
             </div>
 
             {/* Product Info */}
-            <div className="space-y-6">
+            <div ref={contentRef} className="space-y-8">
               <div>
-                <p className="text-xs tracking-widest text-muted-foreground uppercase mb-2">
+                <p className="text-xs tracking-widest text-accent uppercase mb-3">
                   {product.category}
                 </p>
-                <h1 className="text-3xl lg:text-5xl font-light tracking-tight text-foreground mb-4">
+                <h1 className="text-4xl lg:text-6xl font-light tracking-tight text-foreground mb-6">
                   {product.name}
                 </h1>
-                <p className="text-2xl lg:text-3xl font-medium text-foreground">
+                <p className="text-3xl lg:text-4xl font-light text-foreground">
                   ${product.price.toFixed(2)}
                 </p>
               </div>
 
-              <Separator />
+              <Separator className="bg-border/50" />
 
-              <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+              <p className="text-muted-foreground leading-relaxed text-base lg:text-lg">
                 {product.description}
               </p>
 
               {/* Size Selection */}
               <div>
-                <label className="text-sm tracking-wider text-foreground mb-3 block">
+                <label className="text-sm tracking-wider text-foreground mb-4 block font-medium">
                   SELECT SIZE
                 </label>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-3">
                   {product.sizes.map((size: string) => (
                     <Button
                       key={size}
                       variant={selectedSize === size ? "default" : "outline"}
                       onClick={() => setSelectedSize(size)}
-                      className="min-w-[3rem] tracking-wider"
+                      className="min-w-[3.5rem] h-12 tracking-wider luxury-transition-slow hover:scale-105"
                     >
                       {size}
                     </Button>
@@ -132,21 +168,23 @@ const ProductDetail = () => {
 
               {/* Quantity */}
               <div>
-                <label className="text-sm tracking-wider text-foreground mb-3 block">
+                <label className="text-sm tracking-wider text-foreground mb-4 block font-medium">
                   QUANTITY
                 </label>
                 <div className="flex items-center gap-4">
                   <Button
                     variant="outline"
                     size="icon"
+                    className="h-12 w-12 luxury-transition hover:bg-accent hover:text-accent-foreground hover:border-accent"
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                   >
                     -
                   </Button>
-                  <span className="text-lg font-medium w-12 text-center">{quantity}</span>
+                  <span className="text-xl font-medium w-16 text-center">{quantity}</span>
                   <Button
                     variant="outline"
                     size="icon"
+                    className="h-12 w-12 luxury-transition hover:bg-accent hover:text-accent-foreground hover:border-accent"
                     onClick={() => setQuantity(quantity + 1)}
                   >
                     +
@@ -155,10 +193,10 @@ const ProductDetail = () => {
               </div>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Button
                   size="lg"
-                  className="flex-1 gap-2 tracking-wider"
+                  className="flex-1 gap-2 tracking-wider h-14 shimmer hover:bg-accent luxury-transition-slow"
                   onClick={handleAddToCart}
                 >
                   <ShoppingBag className="h-5 w-5" />
@@ -167,40 +205,53 @@ const ProductDetail = () => {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="gap-2"
+                  className={`gap-2 h-14 luxury-transition-slow hover:scale-105 ${
+                    isWishlisted ? 'bg-accent text-accent-foreground border-accent' : ''
+                  }`}
+                  onClick={handleWishlist}
                 >
-                  <Heart className="h-5 w-5" />
+                  <Heart className={`h-5 w-5 ${isWishlisted ? 'fill-current' : ''}`} />
                 </Button>
               </div>
 
-              <Separator />
+              <Separator className="bg-border/50" />
 
               {/* Product Details */}
               <div>
-                <h3 className="text-sm tracking-wider text-foreground mb-3">
+                <h3 className="text-sm tracking-wider text-foreground mb-4 font-medium">
                   PRODUCT DETAILS
                 </h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
+                <ul className="space-y-3 text-sm text-muted-foreground">
                   {product.details.map((detail: string, index: number) => (
-                    <li key={index}>• {detail}</li>
+                    <li key={index} className="flex items-start gap-2">
+                      <span className="text-accent mt-1">•</span>
+                      <span>{detail}</span>
+                    </li>
                   ))}
                 </ul>
               </div>
 
-              {/* Shipping Info */}
-              <div className="space-y-4 pt-4">
-                <div className="flex gap-3">
-                  <Truck className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+              {/* Features */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 bg-muted/30 p-6 rounded-lg">
+                <div className="flex flex-col items-center text-center gap-3">
+                  <Truck className="h-6 w-6 text-accent" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Free Shipping</p>
                     <p className="text-xs text-muted-foreground">On orders over $100</p>
                   </div>
                 </div>
-                <div className="flex gap-3">
-                  <RefreshCcw className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                <div className="flex flex-col items-center text-center gap-3">
+                  <RefreshCcw className="h-6 w-6 text-accent" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Easy Returns</p>
                     <p className="text-xs text-muted-foreground">30-day return policy</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center text-center gap-3">
+                  <Shield className="h-6 w-6 text-accent" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Secure Payment</p>
+                    <p className="text-xs text-muted-foreground">100% protected</p>
                   </div>
                 </div>
               </div>
