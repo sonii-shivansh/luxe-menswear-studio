@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Menu, X, ShoppingBag, Search, User } from "lucide-react";
+import { Menu, X, ShoppingBag, Search, User, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SearchModal } from "./SearchModal";
 
 export const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
@@ -23,17 +25,30 @@ export const Navbar = () => {
             <Link to="/about" className="text-sm tracking-wide text-foreground hover:text-accent luxury-transition">
               ABOUT
             </Link>
+            <Link to="/faq" className="text-sm tracking-wide text-foreground hover:text-accent luxury-transition">
+              FAQ
+            </Link>
             <Link to="/contact" className="text-sm tracking-wide text-foreground hover:text-accent luxury-transition">
               CONTACT
             </Link>
           </div>
 
           {/* Icons */}
-          <div className="flex items-center space-x-4 lg:space-x-6">
-            <Button variant="ghost" size="icon" className="hover:text-accent">
+          <div className="flex items-center space-x-2 lg:space-x-4">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="hover:text-accent"
+              onClick={() => setIsSearchOpen(true)}
+            >
               <Search className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" className="hover:text-accent">
+            <Link to="/wishlist">
+              <Button variant="ghost" size="icon" className="hover:text-accent hidden sm:flex">
+                <Heart className="h-5 w-5" />
+              </Button>
+            </Link>
+            <Button variant="ghost" size="icon" className="hover:text-accent hidden sm:flex">
               <User className="h-5 w-5" />
             </Button>
             <Link to="/cart">
@@ -59,31 +74,47 @@ export const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 space-y-4 border-t border-border">
+          <div className="md:hidden py-6 space-y-4 border-t border-border animate-fade-in">
             <Link
               to="/shop"
-              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition"
+              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition px-4 py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               SHOP
             </Link>
             <Link
               to="/about"
-              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition"
+              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition px-4 py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               ABOUT
             </Link>
             <Link
+              to="/faq"
+              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition px-4 py-2"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              FAQ
+            </Link>
+            <Link
               to="/contact"
-              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition"
+              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition px-4 py-2"
               onClick={() => setIsMenuOpen(false)}
             >
               CONTACT
             </Link>
+            <Link
+              to="/wishlist"
+              className="block text-sm tracking-wide text-foreground hover:text-accent luxury-transition px-4 py-2 sm:hidden"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              WISHLIST
+            </Link>
           </div>
         )}
       </div>
+      
+      <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </nav>
   );
 };

@@ -78,14 +78,14 @@ export const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-accent luxury-transition">
+                <Link to="/size-guide" className="hover:text-accent luxury-transition">
                   Size Guide
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-accent luxury-transition">
+                <Link to="/faq" className="hover:text-accent luxury-transition">
                   FAQ
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-accent luxury-transition">

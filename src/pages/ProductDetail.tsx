@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ShoppingBag, Heart, Truck, RefreshCcw, Shield } from "lucide-react";
@@ -114,6 +115,13 @@ const ProductDetail = () => {
 
       <main className="flex-1 py-16 lg:py-24 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <Breadcrumb 
+            items={[
+              { label: 'Shop', href: '/shop' },
+              { label: product.name }
+            ]} 
+          />
+          
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Product Images */}
             <div ref={imageRef} className="space-y-6">
