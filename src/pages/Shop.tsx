@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Product3DCard } from "@/components/Product3DCard";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AnimatedText } from "@/components/AnimatedText";
+import { Breadcrumb } from "@/components/Breadcrumb";
 import { Button } from "@/components/ui/button";
 import { SlidersHorizontal } from "lucide-react";
 import productShirt1 from "@/assets/product-shirt-1.jpg";
@@ -61,6 +62,8 @@ const Shop = () => {
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <Breadcrumb items={[{ label: 'Shop' }]} />
+          
           {/* Header */}
           <div ref={headerRef} className="text-center mb-16 lg:mb-20">
             <AnimatedText className="text-5xl lg:text-7xl font-light tracking-tight text-foreground mb-4">

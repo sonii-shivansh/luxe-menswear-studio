@@ -7,6 +7,8 @@ import { Product3DCard } from "@/components/Product3DCard";
 import { Hero3D } from "@/components/Hero3D";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AnimatedText } from "@/components/AnimatedText";
+import { Newsletter } from "@/components/Newsletter";
+import { Testimonials } from "@/components/Testimonials";
 import heroBanner from "@/assets/hero-banner.jpg";
 import productShirt1 from "@/assets/product-shirt-1.jpg";
 import productBlazer1 from "@/assets/product-blazer-1.jpg";
@@ -213,20 +215,26 @@ const Home = () => {
             </AnimatedText>
             <p className="text-muted-foreground leading-relaxed text-base lg:text-lg mb-10 max-w-2xl mx-auto">
               Each piece in our collection is thoughtfully designed and meticulously crafted using the finest materials. 
-              We believe in creating timeless garments that transcend seasonal trends and become essential elements of your wardrobe.
+              We believe in creating timeless pieces that transcend seasonal trends.
             </p>
             <Link to="/about">
               <Button 
-                variant="outline" 
-                size="lg"
-                className="tracking-widest hover:bg-accent hover:text-accent-foreground hover:border-accent luxury-transition-slow shimmer px-12 py-6"
+                size="lg" 
+                variant="outline"
+                className="tracking-wider hover:bg-accent hover:text-accent-foreground hover:border-accent luxury-transition-slow px-10 h-14"
               >
-                LEARN MORE
+                DISCOVER OUR STORY
               </Button>
             </Link>
           </div>
         </div>
       </section>
+
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* Newsletter */}
+      <Newsletter />
 
       <Footer />
     </div>
